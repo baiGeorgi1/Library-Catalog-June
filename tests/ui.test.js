@@ -1,6 +1,15 @@
 const { test, expect } = require("@playwright/test");
 
 const URL = 'http://localhost:3000';
+const USER = async ({ page }) => {
+    await page.goto(`${URL}/login`);
+    await page.locator('#email').fill('peter@abv.bg');
+    await page.locator('#password').fill('123456');
+    await page.click('input[type="submit"]');
+    await page.$('a[href="/catalog"]');
+    expect(page.url()).toBe(`${URL}/catalog`);
+
+};
 
 test('Verify "All Books" link is visible', async ({ page }) => {
     // Open app
@@ -144,6 +153,34 @@ test('Register - pass & re-pass are empty', async ({ page }) => {
     });
     await page.click('input[type="submit"]');
     expect(alertMsg).toBe('All fields are required!');
+
+});
+// *** ADD BOOK ***
+test('Add book with correct data', async ({ page }) => {
+    await page.goto(`${URL}/login`);
+    await page.locator('#email').fill('peter@abv.bg');
+    await page.locator('#password').fill('123456');
+
+    await Promise.all([
+        page.click('input[type="submit"]'),
+        page.waitForURL(`${URL}/catalog`)
+
+    ]);
+    expect(page.url()).toBe(`${URL}/catalog`);
+
+
+    await page.click('a[href="/create"]');
+    await page.waitForSelector('#create-form');
+
+    await page.fill('#title', "Test Name");
+    await page.fill('#description', "Some info");
+    await page.fill('#image', "https://example.com/book-image.jpg");
+    await page.selectOption('#type', "Mistery");
+
+    await page.click('#create-form input[type="submit"]');
+    await page.waitForURL(`${URL}/catalog`);
+    expect(page.url()).toBe(`${URL}/catalog`);
+
 
 })
 
