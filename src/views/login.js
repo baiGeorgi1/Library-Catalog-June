@@ -37,14 +37,14 @@ export async function loginPage(ctx) {
         const email = formData.get('email').trim();
         const password = formData.get('password').trim();
 
-     
-            if (!email || !password) {
-               return alert('All fields are required!');
-            }
 
-            await login(email, password);
-            ctx.setUserNav();
-            ctx.page.redirect('/catalog');
+        if (!email || !password) {
+            return alert('All fields are required!');
+        }
+
+        await login(email, password);
+        ctx.setUserNav();
+        ctx.page.redirect('/catalog');
 
     }
 }
