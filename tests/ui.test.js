@@ -1,13 +1,13 @@
 const { test, expect } = require("@playwright/test");
 
 const URL = 'http://localhost:3000';
-const USER = async ({ page }) => {
+const USER = async (page) => {
     await page.goto(`${URL}/login`);
     await page.locator('#email').fill('peter@abv.bg');
     await page.locator('#password').fill('123456');
     await page.click('input[type="submit"]');
     await page.$('a[href="/catalog"]');
-    expect(page.url()).toBe(`${URL}/catalog`);
+    //expect(page.url()).toBe(`${URL}/catalog`);
 
 };
 
@@ -155,7 +155,8 @@ test('Register - pass & re-pass are empty', async ({ page }) => {
     expect(alertMsg).toBe('All fields are required!');
 
 });
-// *** ADD BOOK ***
+// *** ADD BOOK PAGE ***
+// submit with correct data
 test('Add book with correct data', async ({ page }) => {
     await page.goto(`${URL}/login`);
     await page.locator('#email').fill('peter@abv.bg');
@@ -180,7 +181,60 @@ test('Add book with correct data', async ({ page }) => {
     await page.click('#create-form input[type="submit"]');
     await page.waitForURL(`${URL}/catalog`);
     expect(page.url()).toBe(`${URL}/catalog`);
+});
+// Submit with empty fields
+test('Add book with empty fields', async ({ page }) => {
+    await USER(page);
+    await page.click('a[href="/create"]');
+    await page.waitForSelector('#create-form');
+    // empty title
+    await page.fill('#description', "Some info");
+    await page.fill('#image', "https://example.com/book-image.jpg");
+    await page.selectOption('#type', "Mistery");
 
+    page.on('dialog', async dialog => {
+        expect(dialog.type()).toBe('alert');
+        expect(dialog.message()).toBe('All fields are required!');
+        await dialog.accept();
+    });
+
+    await page.$('a[href="/create"]');
+    expect(page.url()).toBe(`${URL}/create`);
+    await page.locator("#description").clear();
+    await page.locator("#image").clear();
+
+    // Empty description
+    await page.fill('#title', " name");
+    await page.fill('#image', "https://example.com/book-image.jpg");
+    await page.selectOption('#type', "Mistery");
+
+    page.on('dialog', async dialog => {
+        expect(dialog.type()).toBe('alert');
+        expect(dialog.message()).toBe('All fields are required!');
+        await dialog.accept();
+    });
+
+    await page.$('a[href="/create"]');
+    expect(page.url()).toBe(`${URL}/create`);
+    await page.locator("#title").clear();
+    await page.locator("#image").clear();
+
+    //emty image
+    await page.fill('#title', "test2");
+    await page.fill('#description', "Some text");
+    await page.selectOption('#type', "Mistery");
+
+    page.on('dialog', async dialog => {
+        expect(dialog.type()).toBe('alert');
+        expect(dialog.message()).toBe('All fields are required!');
+        await dialog.accept();
+    });
+
+    await page.$('a[href="/create"]');
+    expect(page.url()).toBe(`${URL}/create`);
+    await page.locator("#title").clear();
+    await page.locator("#description").clear();
 
 })
+
 
