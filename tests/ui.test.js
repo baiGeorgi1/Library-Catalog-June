@@ -155,7 +155,7 @@ test('Register - pass & re-pass are empty', async ({ page }) => {
     expect(alertMsg).toBe('All fields are required!');
 
 });
-// *** ADD BOOK PAGE ***
+// *** 'ADD BOOK' Page ***
 // submit with correct data
 test('Add book with correct data', async ({ page }) => {
     await page.goto(`${URL}/login`);
@@ -235,6 +235,26 @@ test('Add book with empty fields', async ({ page }) => {
     await page.locator("#title").clear();
     await page.locator("#description").clear();
 
-})
+});
+// *** 'ALL BOOK' Page ***
+// verify if there are books
+test('Verify all book are displayed', async ({ page }) => {
+    await USER(page);
+
+    await page.waitForSelector('#dashboard-page');
+    const allBooks = await page.$$('.other-books-list li');
+    expect(allBooks.length).toBeGreaterThan(0);
+});
+// Veryfy if there are no books
+test('Verify if there are no books', async ({ page }) => {
+    await USER(page);
+
+    await page.click('a[href="/profile"]');
+    await page.waitForSelector('#my-books-page');
+    const noBooks = await page.textContent('.no-books');
+    expect(noBooks).toBe('No books in database!');
+});
+// *** 'Details' page ***
+
 
 
