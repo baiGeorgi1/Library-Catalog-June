@@ -7,8 +7,6 @@ const USER = async (page) => {
     await page.locator('#password').fill('123456');
     await page.click('input[type="submit"]');
     await page.$('a[href="/catalog"]');
-    //expect(page.url()).toBe(`${URL}/catalog`);
-
 };
 
 test('Verify "All Books" link is visible', async ({ page }) => {
@@ -255,6 +253,21 @@ test('Verify if there are no books', async ({ page }) => {
     expect(noBooks).toBe('No books in database!');
 });
 // *** 'Details' page ***
+test('Detail page with my book', async ({ page }) => {
+    await USER(page);
+    await page.waitForSelector('#dashboard-page');
 
+    await page.click('.otherBooks .button');
+    await page.waitForSelector('#details-page .book-information');
+
+    const bookName = await page.textContent('.book-information h3');
+    expect(bookName).toBe('ghm');
+
+    const editBtn = await page.textContent('.actions > a');
+    expect(editBtn).toBe('Edit');
+    const delBtn = await page.textContent('.actions > a:nth-child(2)');
+    expect(delBtn).toBe('Delete');
+
+})
 
 
