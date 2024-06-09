@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+const { test, expect, request } = require("@playwright/test");
 
 const URL = 'http://localhost:3000';
 const USER = async (page) => {
@@ -297,6 +297,27 @@ test('Verify That Guest User Sees Details Button and Button Works Correctly', as
     const detailBtn = await page.waitForSelector('.other-books-list .button');
     const btn = await detailBtn.isVisible();
     expect(btn).toBe(true);
+});
 
+// *** Logout ***
+// Verify That the "Logout" Button Is Visible
+test('"Logout" Button Is Visible', async ({ page }) => {
+    await USER(page);
+    const logout = page.locator('#logoutBtn');
+    const onCatalogPage = await logout.isVisible();
+    expect(onCatalogPage).toBe(true);
+    await page.click('a[href="/profile"]');
+    const onProfilePage = await logout.isVisible();
+    expect(onProfilePage).toBe(true);
+    await page.click('a[href="/profile"]');
+    const onAddBookPage = await logout.isVisible();
+    expect(onAddBookPage).toBe(true);
+});
+test('Logout Button redirect correctly', async ({ page }) => {
+    await USER(page);
+    await page.click('#logoutBtn');
+
+    const currentUrl = page.url();
+    expect(currentUrl).toBe(`${URL}/`);
 
 });
