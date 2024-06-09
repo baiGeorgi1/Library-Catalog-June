@@ -2,7 +2,7 @@ import { html } from '../../node_modules/lit-html/lit-html.js';
 import { getBookById, deleteBookById, getBookTotalLikes, likeBookApi, isUserAlreadyLiked } from '../api/data.js';
 
 
-const detailsTemplate = (isCreator, data, onDelete, bookTotalLikes, likeBook, userAlreadyLiked) => html `
+const detailsTemplate = (isCreator, data, onDelete, bookTotalLikes, likeBook, userAlreadyLiked) => html`
 <section id="details-page" class="details">
     <div class="book-information">
         <h3>${data.title}</h3>
@@ -18,6 +18,7 @@ const detailsTemplate = (isCreator, data, onDelete, bookTotalLikes, likeBook, us
             <!-- Like button ( Only for logged-in users, which is not creators of the current book ) -->
             ${!isCreator && !userAlreadyLiked ? html`<a @click=${likeBook} class="button"
                 href="javascript:void(0)">Like</a>` : ''}
+           
 
             <!-- ( for Guests and Users )  -->
             <div class="likes">
@@ -34,7 +35,7 @@ const detailsTemplate = (isCreator, data, onDelete, bookTotalLikes, likeBook, us
 </section>
 `;
 
-const detailsTemplateGuests = (data, bookTotalLikes) => html `
+const detailsTemplateGuests = (data, bookTotalLikes) => html`
 <section id="details-page" class="details">
     <div class="book-information">
         <h3>${data.title}</h3>
@@ -65,22 +66,22 @@ export async function detailsPage(ctx) {
 
     const isUser = sessionStorage.getItem('userId');
 
-    if (isUser==null) {
-      ctx.render(detailsTemplateGuests( book, bookTotalLikes)); 
-    }else{
+    if (isUser == null) {
+        ctx.render(detailsTemplateGuests(book, bookTotalLikes));
+    } else {
 
-      let userAlreadyLiked = await isUserAlreadyLiked(id, sessionStorage.getItem('userId'));
+        let userAlreadyLiked = await isUserAlreadyLiked(id, sessionStorage.getItem('userId'));
 
-     console.log(userAlreadyLiked);
-      if (userAlreadyLiked == 0) {
-          userAlreadyLiked = false;
-      }
-      if (userAlreadyLiked == 1) {
-          userAlreadyLiked = true;
-      }
+        console.log(userAlreadyLiked);
+        if (userAlreadyLiked == 0) {
+            userAlreadyLiked = false;
+        }
+        if (userAlreadyLiked == 1) {
+            userAlreadyLiked = true;
+        }
 
-      ctx.render(detailsTemplate(isCreator, book, onDelete, bookTotalLikes, likeBook, userAlreadyLiked));
-}
+        ctx.render(detailsTemplate(isCreator, book, onDelete, bookTotalLikes, likeBook, userAlreadyLiked));
+    }
 
     async function onDelete() {
         const confirmed = confirm('Are you sure?');

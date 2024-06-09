@@ -8,6 +8,13 @@ const USER = async (page) => {
     await page.click('input[type="submit"]');
     await page.$('a[href="/catalog"]');
 };
+const notCreator = async (page) => {
+    await page.goto(`${URL}/login`);
+    await page.locator('#email').fill('john@abv.bg');
+    await page.locator('#password').fill('123456');
+    await page.click('input[type="submit"]');
+    await page.$('a[href="/catalog"]');
+};
 
 test('Verify "All Books" link is visible', async ({ page }) => {
     // Open app
@@ -257,17 +264,39 @@ test('Detail page with my book', async ({ page }) => {
     await USER(page);
     await page.waitForSelector('#dashboard-page');
 
-    await page.click('.otherBooks .button');
+    await page.click('.other-books-list li:nth-child(2) .button');
     await page.waitForSelector('#details-page .book-information');
 
     const bookName = await page.textContent('.book-information h3');
-    expect(bookName).toBe('ghm');
+    expect(bookName).toBe('Outlander');
 
     const editBtn = await page.textContent('.actions > a');
     expect(editBtn).toBe('Edit');
     const delBtn = await page.textContent('.actions > a:nth-child(2)');
     expect(delBtn).toBe('Delete');
+    const btns = await page.$$('.actions a');
+    expect(btns.length).toBe(2);
 
-})
+});
+// Verify If Edit and Delete Buttons Are Not Visible for Non-Creator
+test('Verify If Edit and Delete Buttons Are Not Visible for Non-Creator', async ({ page }) => {
+    await notCreator(page);
+    await page.click('.other-books-list li:nth-child(2) .button');
+    await page.waitForSelector('#details-page .book-information');
+    const likeBtn = await page.textContent('.actions > a');
+    expect(likeBtn).toBe('Like');
+    const btns = await page.$$('.actions a');
+    expect(btns.length).toBe(1);
+});
+
+// Verify That Guest User Sees Details Button and Button Works Correctly
+test('Verify That Guest User Sees Details Button and Button Works Correctly', async ({ page }) => {
+    await page.goto(`${URL}`);
+    await page.waitForSelector('.navbar');
+    await page.click('a[href="/catalog"]');
+    const detailBtn = await page.waitForSelector('.other-books-list .button');
+    const btn = await detailBtn.isVisible();
+    expect(btn).toBe(true);
 
 
+});
