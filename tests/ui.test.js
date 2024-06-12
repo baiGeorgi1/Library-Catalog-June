@@ -50,7 +50,7 @@ test('Verify "All Books" link is visible after login', async ({ page }) => {
     await page.locator('#password').fill('123456');
     await page.click('input[type="submit"]');
     await page.$('a[href="/catalog"]');
-    await page.waitForTimeout(2000);
+    await page.waitForURL(`${URL}/catalog`);
     expect(page.url()).toBe(`${URL}/catalog`);
 
     const allBooksLink = await page.$('a[href="/catalog"]');
