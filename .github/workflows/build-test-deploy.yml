@@ -29,5 +29,7 @@ jobs:
                   Start FE
                   # Add &
               run: npm run start-fe &
+            - name: Install Playwright
+              run: npx playwright install
             - name: Start UI tests
               run: npm run test:ui
