@@ -311,12 +311,15 @@ test('"Logout" Button Is Visible', async ({ page }) => {
     const logout = page.locator('#logoutBtn');
     await page.waitForSelector('#site-header');
     const onCatalogPage = await logout.isVisible();
+    await page.waitForSelector('#site-header');
     expect(onCatalogPage).toBe(true);
     await page.click('a[href="/profile"]');
     const onProfilePage = await logout.isVisible();
+    await page.waitForSelector('#site-header');
     expect(onProfilePage).toBe(true);
     await page.click('a[href="/profile"]');
     const onAddBookPage = await logout.isVisible();
+    await page.waitForSelector('#site-header');
     expect(onAddBookPage).toBe(true);
 });
 test('Logout Button redirect correctly', async ({ page }) => {
