@@ -309,6 +309,7 @@ test('Verify That Guest User Sees Details Button and Button Works Correctly', as
 test('"Logout" Button Is Visible', async ({ page }) => {
     await USER(page);
     const logout = page.locator('#logoutBtn');
+    await page.waitForSelector('#site-header');
     const onCatalogPage = await logout.isVisible();
     expect(onCatalogPage).toBe(true);
     await page.click('a[href="/profile"]');
