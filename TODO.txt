@@ -1,0 +1,4 @@
+1. NPM Install
+2. Start-BE
+3. Start-FE
+4. Run tests
