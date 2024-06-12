@@ -1,35 +1,35 @@
-
 name: Build and Test
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4  
-    - name: Use Node.js 20.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'npm'
-    # Step
-    - name: Install npm dependencies
-      # Action
-      run: npm install
-    # Step
-    - name: Start the BE
-      # Action
-      run: npm run start-be
-    - name: Start FE
-      run: npm run start-fe
-    - name: Start UI tests
-      run: npm run test:ui
-    
-    
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Node.js 20.x
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20.x
+                  cache: "npm"
+            # Step
+            - name: Install npm dependencies
+              # Action
+              run: npm install
+            # Step
+            - name: Start the BE
+              # Action and add &
+              run: npm run start-be &
+            - name:
+                  Start FE
+                  # Add &
+              run: npm run start-fe &
+            - name: Install Playwright
+              run: npx playwright install
+            - name: Start UI tests
+              run: npm run test:ui
