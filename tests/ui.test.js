@@ -320,6 +320,7 @@ test('"Logout" Button Is Visible', async ({ page }) => {
 test('Logout Button redirect correctly', async ({ page }) => {
     await USER(page);
     await page.click('#logoutBtn');
+    await page.waitForTimeout(2000);
 
     const currentUrl = page.url();
     expect(currentUrl).toBe(`${URL}/`);
