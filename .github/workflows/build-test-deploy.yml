@@ -25,7 +25,7 @@ jobs:
             # Step
             # this step is to test on localhost, after we conect our app with render
             - name: Change config
-              run: echo "export const settings = { host:\"https://localhost:3030\" }" > config.js
+              run: echo "export const settings = { host:\"http://localhost:3030\" }" > config.js
             - name: Start the BE
               # Action and add &
               run: npm run start-be &
