@@ -8,7 +8,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    build:
+    build_and_test:
         runs-on: ubuntu-latest
 
         steps:
@@ -34,3 +34,27 @@ jobs:
               run: npx playwright install
             - name: Start UI tests
               run: npm run test:ui
+    deploy-BE:
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
+        needs: build_and_test
+        steps:
+            - name: Deploy to production
+              uses: johnbeynon/render-deploy-action@v0.0.8
+              with:
+                  service-id: ${{secrets.BACKEND_API_KEY}}
+                  api-key: ${{secrets.RENDER_KEY}}
+            - name: Sleep for 60 sec
+              run: sleep 60
+    deploy-FE:
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
+        needs: deploy-BE
+        steps:
+            - name: Deploy to production
+              uses: johnbeynon/render-deploy-action@v0.0.8
+              with:
+                  service-id: ${{secrets.FRONTEND_API_KEY}}
+                  api-key: ${{secrets.RENDER_KEY}}
+            - name: Sleep for 60 sec
+              run: sleep 60
