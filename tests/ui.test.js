@@ -49,6 +49,7 @@ test('Verify "All Books" link is visible after login', async ({ page }) => {
     await page.locator('#email').fill('peter@abv.bg');
     await page.locator('#password').fill('123456');
     await page.click('input[type="submit"]');
+    await page.waitForTimeout(2000);
     await page.$('a[href="/catalog"]');
     await page.waitForURL(`${URL}/catalog`);
     expect(page.url()).toBe(`${URL}/catalog`);
@@ -265,9 +266,11 @@ test('Verify all book are displayed', async ({ page }) => {
 test('Detail page with my book', async ({ page }) => {
     await notCreator(page);
     await page.click('a[href="/profile"]');
+    await page.waitForTimeout(2000);
     await page.waitForSelector('#my-books-page');
 
     await page.click('.my-books-list .button');
+    await page.waitForTimeout(2000);
     await page.waitForSelector('#site-content');
 
     const bookName = await page.textContent('.book-information h3');
@@ -310,14 +313,17 @@ test('"Logout" Button Is Visible', async ({ page }) => {
     await USER(page);
     const logout = page.locator('#logoutBtn');
     await page.waitForSelector('#site-header');
+    await page.waitForTimeout(2000);
     const onCatalogPage = await logout.isVisible();
     await page.waitForSelector('#site-header');
     expect(onCatalogPage).toBe(true);
     await page.click('a[href="/profile"]');
+    await page.waitForTimeout(2000);
     const onProfilePage = await logout.isVisible();
     await page.waitForSelector('#site-header');
     expect(onProfilePage).toBe(true);
     await page.click('a[href="/profile"]');
+    await page.waitForTimeout(2000);
     const onAddBookPage = await logout.isVisible();
     await page.waitForSelector('#site-header');
     expect(onAddBookPage).toBe(true);
