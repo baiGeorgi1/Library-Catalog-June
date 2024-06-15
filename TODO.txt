@@ -1,6 +1,9 @@
 1. NPM Install
 2. Start-BE
 3. Start-FE
+
+4. Run tests
+
 4. Install Playwright
 4.1 Run tests 
 ---IF SUCCESS
@@ -18,3 +21,4 @@ BACKEND_API_KEY: srv-cpkn1vvsc6pc73f0dvig
 
 deploy-hook from Static Site - https://api.render.com/deploy/srv-cpkndm6d3nmc73am4fsg?key=uZ0KrOHqGGw
 FRONTEND_API_KEY: srv-cpkndm6d3nmc73am4fsg
+
