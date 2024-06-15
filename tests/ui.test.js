@@ -50,6 +50,7 @@ test('Verify "All Books" link is visible after login', async ({ page }) => {
     await page.locator('#password').fill('123456');
     await page.click('input[type="submit"]');
     await page.$('a[href="/catalog"]');
+    await page.waitForURL(`${URL}/catalog`);
     expect(page.url()).toBe(`${URL}/catalog`);
 
     const allBooksLink = await page.$('a[href="/catalog"]');
@@ -308,18 +309,23 @@ test('Verify That Guest User Sees Details Button and Button Works Correctly', as
 test('"Logout" Button Is Visible', async ({ page }) => {
     await USER(page);
     const logout = page.locator('#logoutBtn');
+    await page.waitForSelector('#site-header');
     const onCatalogPage = await logout.isVisible();
+    await page.waitForSelector('#site-header');
     expect(onCatalogPage).toBe(true);
     await page.click('a[href="/profile"]');
     const onProfilePage = await logout.isVisible();
+    await page.waitForSelector('#site-header');
     expect(onProfilePage).toBe(true);
     await page.click('a[href="/profile"]');
     const onAddBookPage = await logout.isVisible();
+    await page.waitForSelector('#site-header');
     expect(onAddBookPage).toBe(true);
 });
 test('Logout Button redirect correctly', async ({ page }) => {
     await USER(page);
     await page.click('#logoutBtn');
+    await page.waitForTimeout(2000);
 
     const currentUrl = page.url();
     expect(currentUrl).toBe(`${URL}/`);
